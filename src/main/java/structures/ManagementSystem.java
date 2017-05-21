@@ -1,5 +1,6 @@
 package structures;
 
+import java.nio.charset.Charset;
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
@@ -12,7 +13,8 @@ public class ManagementSystem {
 
     private ManagementSystem() throws Exception {
         Class.forName("com.mysql.cj.jdbc.Driver");
-        connection = DriverManager.getConnection("jdbc:mysql://localhost/students?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC",
+//        connection = DriverManager.getConnection("jdbc:mysql://localhost/students?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC",
+        connection = DriverManager.getConnection("jdbc:mysql://localhost/students?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&characterEncoding=utf8",
                 "root", "data1234");
     }
 
@@ -86,9 +88,14 @@ public class ManagementSystem {
     }
 
     public void insertStudent(Student student) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("insert into students " +
+//        PreparedStatement statement = connection.prepareStatement("insert into students " +
+//                "(first_name, sur_name, last_name, sex, date_of_birth, group_id, education_year) " +
+//                "values (?, ?, ?, ?, ?, ?, ?)");
+
+        PreparedStatement statement = connection.prepareStatement(new String( ("insert into students " +
                 "(first_name, sur_name, last_name, sex, date_of_birth, group_id, education_year) " +
-                "values (?, ?, ?, ?, ?, ?, ?)");
+                "values (?, ?, ?, ?, ?, ?, ?)").getBytes(), Charset.forName("utf-8")));
+
         statement.setString(1, student.getFirstName());
         statement.setString(2, student.getSurName());
         statement.setString(3, student.getLastName());

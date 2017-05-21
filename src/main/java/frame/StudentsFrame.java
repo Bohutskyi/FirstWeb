@@ -123,7 +123,7 @@ public class StudentsFrame extends JFrame implements ActionListener, ListSelecti
         JButton btnAddSt = new JButton("Добавити");
         btnAddSt.setName(INSERT_ST);
         btnAddSt.addActionListener(this);
-        JButton btnUpdSt = new JButton("Виправити");
+        JButton btnUpdSt = new JButton("Редагувати");
         btnUpdSt.setName(UPDATE_ST);
         btnUpdSt.addActionListener(this);
         JButton btnDelSt = new JButton("Видалити");
@@ -184,26 +184,19 @@ public class StudentsFrame extends JFrame implements ActionListener, ListSelecti
         reloadStudents();
     }
 
-    // метод для обновления списка студентов для определенной группы
     public void reloadStudents() {
-//        JOptionPane.showMessageDialog(this, "reloadStudents");
-        new Thread() {
-            @Override
-            public void run() {
-                if (studentsList != null) {
-                    Group group = (Group) groupList.getSelectedValue();
-                    int year = ((SpinnerNumberModel) spYear.getModel()).getNumber().intValue();
-                    try {
-                        Collection<Student> students = managementSystem.getStudentsFromGroup(group, year);
-                        studentsList.setModel(new StudentTableModel(new Vector<Student>(students)));
-                    } catch (SQLException e) {
-                        JOptionPane.showMessageDialog(StudentsFrame.this, e.getMessage());
-                    }
+        new Thread(() -> {
+            if (studentsList != null) {
+                Group group = (Group) groupList.getSelectedValue();
+                int year = ((SpinnerNumberModel) spYear.getModel()).getNumber().intValue();
+                try {
+                    Collection<Student> students = managementSystem.getStudentsFromGroup(group, year);
+                    studentsList.setModel(new StudentTableModel(new Vector<Student>(students)));
+                } catch (SQLException e) {
+                    JOptionPane.showMessageDialog(StudentsFrame.this, e.getMessage());
                 }
             }
-        }.start();
-
-
+        }).start();
     }
 
     // метод для переноса группы
@@ -284,56 +277,74 @@ public class StudentsFrame extends JFrame implements ActionListener, ListSelecti
     // метод для редактирования студента
     private void updateStudent() {
         JOptionPane.showMessageDialog(this, "updateStudent");
+//        new Thread(() -> {
+//
+//            if (studentsList != null) {
+//                if (studentsList.getSelectedRowCount() > 1) {
+//                    JOptionPane.showMessageDialog(StudentsFrame.this, "Не можна редагувати декілька студентів одночасно");
+//                } else if (studentsList.getSelectedRowCount() == 0) {
+//                    JOptionPane.showMessageDialog(StudentsFrame.this, "Виберіть студента для редагування");
+//                }
+//
+//                try {
+//                    StudentDialog dialog = new StudentDialog(managementSystem.getGroups(), false, StudentsFrame.this);
+//                    dialog.setStudent(((StudentTableModel) studentsList.getModel()).getStudent(studentsList.getSelectedRow()));
+//                    dialog.setModal(true);
+//                    dialog.setVisible(true);
+//                    reloadStudents();
+//                } catch (SQLException e) {
+//                    JOptionPane.showMessageDialog(StudentsFrame.this, e.getMessage());
+//                }
+//
+//
+//            }
+//        }).start();
     }
 
-    // метод для удаления студента
     private void deleteStudent() {
-//        JOptionPane.showMessageDialog(this, "deleteStudent");
-        new Thread() {
-            @Override
-            public void run() {
-                if (studentsList != null) {
-                    StudentTableModel studentTableModel = (StudentTableModel) studentsList.getModel();
-                    if (studentsList.getSelectedRow() >= 0) {
-                        if (JOptionPane.showConfirmDialog(StudentsFrame.this, "Ви дійсно хочете видалити студента?",
-                                "Видалення студента", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                            Student student = studentTableModel.getStudent(studentsList.getSelectedRow());
-                            try {
-                                managementSystem.deleteStudent(student);
-                                reloadStudents();
-                            } catch (SQLException e) {
-                                JOptionPane.showMessageDialog(StudentsFrame.this, e.getMessage());
-                            }
+        new Thread(() -> {
+            if (studentsList != null) {
+
+                String message;
+                if (studentsList.getSelectedRowCount() == 1) {
+                    message = "Ви дійсно хочете видалити студента?";
+                } else if (studentsList.getSelectedRowCount() == 0) {
+                    return;
+                } else {
+                    message = "Ви дійсно хочете видалити студентів?";
+                }
+
+                StudentTableModel studentTableModel = (StudentTableModel) studentsList.getModel();
+                if (JOptionPane.showConfirmDialog(StudentsFrame.this, message,
+                        "Видалення студента", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    for (int i : studentsList.getSelectedRows()) {
+                        Student student = studentTableModel.getStudent(i);
+                        try {
+                            managementSystem.deleteStudent(student);
+                        } catch (SQLException e) {
+                            JOptionPane.showMessageDialog(StudentsFrame.this, e.getMessage());
                         }
-                    } else {
-                        JOptionPane.showMessageDialog(StudentsFrame.this, "Необхідно виділити сдудента у списку");
                     }
                 }
+                reloadStudents();
             }
-        }.start();
+        }).start();
     }
 
-    // метод для показа всех студентов
     private void showAllStudents() {
         JOptionPane.showMessageDialog(this, "showAllStudents");
     }
 
-
-
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    // Мы сразу отменим продолжение работы, если не сможем получить
-                    // коннект к базе данных
-                    StudentsFrame studentsFrame = new StudentsFrame();
-                    studentsFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-                    studentsFrame.setVisible(true);
+        SwingUtilities.invokeLater(() -> {
+            try {
+                StudentsFrame studentsFrame = new StudentsFrame();
+                studentsFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+                studentsFrame.setVisible(true);
 
-                    studentsFrame.reloadStudents();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+                studentsFrame.reloadStudents();
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         });
     }
