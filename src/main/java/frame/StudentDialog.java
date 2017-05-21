@@ -10,6 +10,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.SQLException;
 import java.time.Month;
 import java.util.*;
 import java.util.List;
@@ -19,23 +20,21 @@ public class StudentDialog extends JDialog implements ActionListener {
     private static final int HEIGHT = 200, WIDTH = 550;
     private static final int L_X = 10, L_W = 100, C_W = 150;
     private StudentsFrame owner;
-    private boolean result;
+    private boolean result, newStudent;
     private int studentId = 0;
     private JTextField firstName = new JTextField(),
             surName = new JTextField(),
             lastName = new JTextField();
-    private JSpinner dateOfBirth = new JSpinner(new SpinnerDateModel(new Date(), null, null, Calendar.DAY_OF_MONTH));
     private ButtonGroup sex = new ButtonGroup();
     private JSpinner year = new JSpinner(new SpinnerNumberModel(2006, 1996, 2020, 1));
     private JComboBox groupList;
     private JComboBox years, months, days;
 
     public StudentDialog(List<Group> groups, boolean newStudent, StudentsFrame owner) {
-        // После вставки студента без закрытия окна нам потребуется перегрузка списка
-        // А для этого нам надо иметь доступ к этому методу в главной форме
         this.owner = owner;
         this.setResizable(false);
 
+        this.newStudent = newStudent;
         if (newStudent) {
             setTitle("Додавання нових студентів");
         } else {
@@ -43,7 +42,7 @@ public class StudentDialog extends JDialog implements ActionListener {
         }
         getContentPane().setLayout(new FlowLayout());
 
-        groupList = new JComboBox(new Vector<Group>(groups));
+        groupList = new JComboBox(new Vector<>(groups));
 
         JRadioButton m = new JRadioButton("Чол");
         JRadioButton w = new JRadioButton("Жін");
@@ -54,45 +53,38 @@ public class StudentDialog extends JDialog implements ActionListener {
 
         getContentPane().setLayout(null);
 
-        // Прізвище
-        JLabel l = new JLabel("Прізвище:", JLabel.RIGHT);
-        l.setBounds(L_X, 10, L_W, 20);
-        getContentPane().add(l);
+        JLabel label = new JLabel("Прізвище:", JLabel.RIGHT);
+        label.setBounds(L_X, 10, L_W, 20);
+        getContentPane().add(label);
         surName.setBounds(L_X + L_W + 10 + 62, 10, C_W, 20);
         getContentPane().add(surName);
 
-        // Ім'я
-        l = new JLabel("Ім'я:", JLabel.RIGHT);
-        l.setBounds(L_X, 30, L_W, 20);
-        getContentPane().add(l);
+        label = new JLabel("Ім'я:", JLabel.RIGHT);
+        label.setBounds(L_X, 30, L_W, 20);
+        getContentPane().add(label);
         firstName.setBounds(L_X + L_W + 10 + 62, 30, C_W, 20);
         getContentPane().add(firstName);
 
-        // По батькові
-        l = new JLabel("По батькові:", JLabel.RIGHT);
-        l.setBounds(L_X, 50, L_W, 20);
-        getContentPane().add(l);
+        label = new JLabel("По батькові:", JLabel.RIGHT);
+        label.setBounds(L_X, 50, L_W, 20);
+        getContentPane().add(label);
         lastName.setBounds(L_X + L_W + 10 + 62, 50, C_W, 20);
         getContentPane().add(lastName);
 
-        // Стать
-        l = new JLabel("Стать:", JLabel.RIGHT);
-        l.setBounds(L_X, 70, L_W, 20);
-        getContentPane().add(l);
+        label = new JLabel("Стать:", JLabel.RIGHT);
+        label.setBounds(L_X, 70, L_W, 20);
+        getContentPane().add(label);
         m.setBounds(L_X + L_W + 10 + 65, 70, C_W / 2, 20);
         getContentPane().add(m);
-        // Сделаем по умолчанию женщину - из уважения
         w.setBounds(L_X + L_W + 10 + 65 + C_W / 2, 70, C_W / 2, 20);
         w.setSelected(true);
         getContentPane().add(w);
 
-
-        // Дата народження
-        l = new JLabel("Дата народження:", JLabel.RIGHT);
-        l.setBounds(L_X, 90, L_W, 20);
-        getContentPane().add(l);
+        label = new JLabel("Дата народження:", JLabel.RIGHT);
+        label.setBounds(L_X, 90, L_W, 20);
+        getContentPane().add(label);
         years = new JComboBox<>();
-        for (int i = 1996; i < 2021; ++i) {
+        for (int i = 1980; i < 2000; ++i) {
             years.addItem(i);
         }
         years.setSelectedItem(2017);
@@ -138,18 +130,15 @@ public class StudentDialog extends JDialog implements ActionListener {
             }
         });
 
-
-        // Група
-        l = new JLabel("Група:", JLabel.RIGHT);
-        l.setBounds(L_X, 115, L_W, 25);
-        getContentPane().add(l);
+        label = new JLabel("Група:", JLabel.RIGHT);
+        label.setBounds(L_X, 115, L_W, 25);
+        getContentPane().add(label);
         groupList.setBounds(L_X + L_W + 10, 115, C_W + 125, 25);
         getContentPane().add(groupList);
 
-        // Рік навчання
-        l = new JLabel("Рік навчання:", JLabel.RIGHT);
-        l.setBounds(L_X, 145, L_W, 20);
-        getContentPane().add(l);
+        label = new JLabel("Рік навчання:", JLabel.RIGHT);
+        label.setBounds(L_X, 145, L_W, 20);
+        getContentPane().add(label);
         year.setBounds(L_X + L_W + 10 + 62, 145, C_W, 20);
         getContentPane().add(year);
 
@@ -189,10 +178,16 @@ public class StudentDialog extends JDialog implements ActionListener {
         firstName.setText(student.getFirstName());
         surName.setText(student.getSurName());
         lastName.setText(student.getLastName());
-        dateOfBirth.getModel().setValue(student.getDateOfBirth());
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(student.getDateOfBirth());
+        years.setSelectedItem(calendar.get(Calendar.YEAR));
+        months.setSelectedItem(calendar.get(Calendar.MONTH));
+        days.setSelectedItem(calendar.get(Calendar.DAY_OF_MONTH));
+
         for (Enumeration e = sex.getElements(); e.hasMoreElements(); ) {
             AbstractButton abstractButton = (AbstractButton) e.nextElement();
-            abstractButton.setSelected(abstractButton.getActionCommand().equals(new String("" + student.getSex())));
+            abstractButton.setSelected(abstractButton.getActionCommand().equals("" + student.getSex()));
         }
         year.getModel().setValue(student.getEducationYear());
         for (int i = 0; i < groupList.getModel().getSize(); ++i) {
@@ -214,7 +209,7 @@ public class StudentDialog extends JDialog implements ActionListener {
         student.setSurName(surName.getText());
         student.setLastName(lastName.getText());
 
-        Calendar temp = new GregorianCalendar((int) years.getSelectedItem() , months.getSelectedIndex(), (int) days.getSelectedItem());
+        Calendar temp = new GregorianCalendar((int) years.getSelectedItem() , months.getSelectedIndex(), (int) days.getSelectedItem() + 1);
         student.setDateOfBirth(temp.getTime());
 
         for (Enumeration e = sex.getElements(); e.hasMoreElements();) {
@@ -235,12 +230,8 @@ public class StudentDialog extends JDialog implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         JButton source = (JButton) e.getSource();
-        // Добавляем студента, но не закрываем окно
-        // Здесь мы не будем вызывать в отдельном потоке сохранение.
-        // Оно не занимаем много времени и лишние действия здесь не оправданы
         if (source.getName().equals("Add new")) {
             try {
-//                ManagementSystem.getInstance().insertStudent(getStudent());
                 Student newStudent = getStudent();
                 if (newStudent == null) {
                     return;
@@ -250,13 +241,25 @@ public class StudentDialog extends JDialog implements ActionListener {
                 firstName.setText("");
                 surName.setText("");
                 lastName.setText("");
-            } catch (Exception sql_e) {
-                JOptionPane.showMessageDialog(this, sql_e.getMessage());
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage());
             }
             result = true;
             return;
         }
         if (source.getName().equals("Ok")) {
+            if (!newStudent) {
+                try {
+                    Student student = getStudent();
+                    if (student == null) {
+                        return;
+                    }
+                    ManagementSystem.getInstance().updateStudent(student);
+                    owner.reloadStudents();
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                }
+            }
             result = true;
         }
         if (source.getName().equals("Cancel")) {
