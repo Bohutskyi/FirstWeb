@@ -72,7 +72,6 @@ public class MoveGroupDialog extends JDialog implements ActionListener {
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(((int) d.getWidth() - MoveGroupDialog.WIDTH) / 2, ((int) d.getHeight() - MoveGroupDialog.HEIGHT) / 2,
                 MoveGroupDialog.WIDTH, MoveGroupDialog.HEIGHT);
-
     }
 
     public int getYear() {
@@ -86,15 +85,11 @@ public class MoveGroupDialog extends JDialog implements ActionListener {
         return null;
     }
 
-    /**Отримання результату
-    * true - при Ok, false - при Cancel
-    * */
     public boolean getResult() {
         return result;
     }
 
-    /**Обробка натискання кнопок
-    * */
+    @Override
     public void actionPerformed(ActionEvent e) {
         JButton src = (JButton) e.getSource();
         if (src.getName().equals("OK")) {

@@ -17,11 +17,12 @@ import java.util.Vector;
 
 public class StudentsFrame extends JFrame implements ActionListener, ListSelectionListener, ChangeListener {
 
-    private static final String MOVE_GR = "moveGroup";
-    private static final String CLEAR_GR = "clearGroup";
-    private static final String INSERT_ST = "insertStudent";
-    private static final String UPDATE_ST = "updateStudent";
-    private static final String DELETE_ST = "deleteStudent";
+    private static final String MOVE_GROUP = "moveGroup";
+    private static final String CLEAR_GROUP = "clearGroup";
+    private static final String CREATE_CROUP = "createGroup";
+    private static final String INSERT_STUDENT = "insertStudent";
+    private static final String UPDATE_STUDENT = "updateStudent";
+    private static final String DELETE_STUDENT = "deleteStudent";
     private static final String ALL_STUDENTS = "allStudent";
 
     private ManagementSystem managementSystem;
@@ -65,17 +66,21 @@ public class StudentsFrame extends JFrame implements ActionListener, ListSelecti
         groupList.setSelectedIndex(0);
         leftPanel.add(new JScrollPane(groupList), BorderLayout.CENTER);
 
-        JButton btnMvGr = new JButton("Перемістити");
-        btnMvGr.setName(MOVE_GR);
-        JButton btnClGr = new JButton("Очистити");
-        btnClGr.setName(CLEAR_GR);
-        btnMvGr.addActionListener(this);
-        btnClGr.addActionListener(this);
+        JButton buttonMoveGroup = new JButton("Перемістити");
+        buttonMoveGroup.setName(MOVE_GROUP);
+        JButton buttonClearGroup = new JButton("Очистити");
+        buttonClearGroup.setName(CLEAR_GROUP);
+        JButton buttonCreateGroup = new JButton(("Створити"));
+        buttonCreateGroup.setName(CREATE_CROUP);
+        buttonMoveGroup.addActionListener(this);
+        buttonClearGroup.addActionListener(this);
+        buttonCreateGroup.addActionListener(this);
 
         JPanel panelButtonGroup = new JPanel();
-        panelButtonGroup.setLayout(new GridLayout(1, 2));
-        panelButtonGroup.add(btnMvGr);
-        panelButtonGroup.add(btnClGr);
+        panelButtonGroup.setLayout(new GridLayout(2, 2));
+        panelButtonGroup.add(buttonMoveGroup);
+        panelButtonGroup.add(buttonClearGroup);
+        panelButtonGroup.add(buttonCreateGroup);
         leftPanel.add(panelButtonGroup, BorderLayout.SOUTH);
 
         JPanel rightPanel = new JPanel();
@@ -92,13 +97,13 @@ public class StudentsFrame extends JFrame implements ActionListener, ListSelecti
         rightPanel.add(new JScrollPane(studentsList), BorderLayout.CENTER);
 
         JButton btnAddSt = new JButton("Добавити");
-        btnAddSt.setName(INSERT_ST);
+        btnAddSt.setName(INSERT_STUDENT);
         btnAddSt.addActionListener(this);
         JButton btnUpdSt = new JButton("Редагувати");
-        btnUpdSt.setName(UPDATE_ST);
+        btnUpdSt.setName(UPDATE_STUDENT);
         btnUpdSt.addActionListener(this);
         JButton btnDelSt = new JButton("Видалити");
-        btnDelSt.setName(DELETE_ST);
+        btnDelSt.setName(DELETE_STUDENT);
         btnDelSt.addActionListener(this);
 
         JPanel panelButtonStudent = new JPanel();
@@ -120,23 +125,26 @@ public class StudentsFrame extends JFrame implements ActionListener, ListSelecti
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() instanceof Component) {
             Component c = (Component) e.getSource();
-            if (c.getName().equals(MOVE_GR)) {
+            if (c.getName().equals(MOVE_GROUP)) {
                 moveGroup();
             }
-            if (c.getName().equals(CLEAR_GR)) {
+            if (c.getName().equals(CLEAR_GROUP)) {
                 clearGroup();
             }
             if (c.getName().equals(ALL_STUDENTS)) {
                 showAllStudents();
             }
-            if (c.getName().equals(INSERT_ST)) {
+            if (c.getName().equals(INSERT_STUDENT)) {
                 insertStudent();
             }
-            if (c.getName().equals(UPDATE_ST)) {
+            if (c.getName().equals(UPDATE_STUDENT)) {
                 updateStudent();
             }
-            if (c.getName().equals(DELETE_ST)) {
+            if (c.getName().equals(DELETE_STUDENT)) {
                 deleteStudent();
+            }
+            if (c.getName().equals(CREATE_CROUP)) {
+                createGroup();
             }
         }
     }
@@ -270,6 +278,16 @@ public class StudentsFrame extends JFrame implements ActionListener, ListSelecti
                 }
                 reloadStudents();
             }
+        }).start();
+    }
+
+    private void createGroup() {
+//        JOptionPane.showMessageDialog(StudentsFrame.this, CREATE_CROUP);
+
+        new Thread(() -> {
+            CreateGroupDialog dialog = new CreateGroupDialog();
+            dialog.setModal(true);
+            dialog.setVisible(true);
         }).start();
     }
 
