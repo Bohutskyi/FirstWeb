@@ -14,12 +14,12 @@ public class MoveGroupDialog extends JDialog implements ActionListener {
     private static final int HEIGHT = 150, WIDTH = 400;
     private JSpinner spYear;
     private JComboBox groupList;
-    private JButton buttonOk = new JButton("Ok");
-    private JButton buttonCancel = new JButton("Cancel");
+//    private JButton buttonOk = new JButton("Ok");
+//    private JButton buttonCancel = new JButton("Cancel");
     private boolean result = false;
 
-    public MoveGroupDialog(int year, List groups) {
-        setTitle("Пеміщення групи");
+    MoveGroupDialog(int year, List groups) {
+        setTitle(MessageResource.getMessageResource().getString("id24"));
         this.setResizable(false);
 
         GridBagLayout gridBagLayout = new GridBagLayout();
@@ -27,7 +27,7 @@ public class MoveGroupDialog extends JDialog implements ActionListener {
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(5, 5,5, 5);
 
-        JLabel label = new JLabel("Нова група");
+        JLabel label = new JLabel(MessageResource.getMessageResource().getString("id25"));
         constraints.gridwidth = GridBagConstraints.RELATIVE;
         constraints.fill = GridBagConstraints.NONE;
         constraints.anchor = GridBagConstraints.EAST;
@@ -41,7 +41,7 @@ public class MoveGroupDialog extends JDialog implements ActionListener {
         gridBagLayout.setConstraints(groupList, constraints);
         getContentPane().add(groupList);
 
-        label = new JLabel("Новий рік:");
+        label = new JLabel(MessageResource.getMessageResource().getString("id26"));
         constraints.gridwidth = GridBagConstraints.RELATIVE;
         constraints.fill = GridBagConstraints.NONE;
         constraints.anchor = GridBagConstraints.EAST;
@@ -57,11 +57,13 @@ public class MoveGroupDialog extends JDialog implements ActionListener {
 
         constraints.gridwidth = GridBagConstraints.RELATIVE;
         constraints.fill = GridBagConstraints.BOTH;
+        JButton buttonOk = new JButton("Ok");
         buttonOk.setName("OK");
         buttonOk.addActionListener(this);
         gridBagLayout.setConstraints(buttonOk, constraints);
         getContentPane().add(buttonOk);
 
+        JButton buttonCancel = new JButton("Cancel");
         buttonCancel.setName("Cancel");
         buttonCancel.addActionListener(this);
         gridBagLayout.setConstraints(buttonCancel, constraints);
@@ -74,18 +76,18 @@ public class MoveGroupDialog extends JDialog implements ActionListener {
                 MoveGroupDialog.WIDTH, MoveGroupDialog.HEIGHT);
     }
 
-    public int getYear() {
+    int getYear() {
         return ((SpinnerNumberModel) spYear.getModel()).getNumber().intValue();
     }
 
-    public Group getGroup() {
+    Group getGroup() {
         if (groupList.getModel().getSize() > 0) {
             return (Group) groupList.getSelectedItem();
         }
         return null;
     }
 
-    public boolean getResult() {
+    boolean getResult() {
         return result;
     }
 

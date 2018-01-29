@@ -36,42 +36,52 @@ public class StudentDialog extends JDialog implements ActionListener {
 
         this.newStudent = newStudent;
         if (newStudent) {
-            setTitle("Додавання нових студентів");
+//            setTitle("Додавання нових студентів");
+            setTitle(MessageResource.getMessageResource().getString("id27"));
         } else {
-            setTitle("Редагування даних про студента");
+//            setTitle("Редагування даних про студента");
+            setTitle(MessageResource.getMessageResource().getString("id28"));
         }
         getContentPane().setLayout(new FlowLayout());
 
         groupList = new JComboBox(new Vector<>(groups));
 
-        JRadioButton m = new JRadioButton("Чол");
-        JRadioButton w = new JRadioButton("Жін");
-        m.setActionCommand("Ч");
-        w.setActionCommand("Ж");
+//        JRadioButton m = new JRadioButton("Чол");
+        JRadioButton m = new JRadioButton(MessageResource.getMessageResource().getString("id29"));
+//        JRadioButton w = new JRadioButton("Жін");
+        JRadioButton w = new JRadioButton(MessageResource.getMessageResource().getString("id31"));
+//        m.setActionCommand("Ч");
+        m.setActionCommand(MessageResource.getMessageResource().getString("id32"));
+//        w.setActionCommand("Ж");
+        w.setActionCommand(MessageResource.getMessageResource().getString("id33"));
         sex.add(m);
         sex.add(w);
 
         getContentPane().setLayout(null);
 
-        JLabel label = new JLabel("Прізвище:", JLabel.RIGHT);
+        JLabel label = new JLabel(MessageResource.getMessageResource().getString("id34"), JLabel.RIGHT);
+//        JLabel label = new JLabel("Прізвище:", JLabel.RIGHT);
         label.setBounds(L_X, 10, L_W, 20);
         getContentPane().add(label);
         surName.setBounds(L_X + L_W + 10 + 62, 10, C_W, 20);
         getContentPane().add(surName);
 
-        label = new JLabel("Ім'я:", JLabel.RIGHT);
+        label = new JLabel(MessageResource.getMessageResource().getString("id35"), JLabel.RIGHT);
+//        label = new JLabel("Ім'я:", JLabel.RIGHT);
         label.setBounds(L_X, 30, L_W, 20);
         getContentPane().add(label);
         firstName.setBounds(L_X + L_W + 10 + 62, 30, C_W, 20);
         getContentPane().add(firstName);
 
-        label = new JLabel("По батькові:", JLabel.RIGHT);
+        label = new JLabel(MessageResource.getMessageResource().getString("id36"), JLabel.RIGHT);
+//        label = new JLabel("По батькові:", JLabel.RIGHT);
         label.setBounds(L_X, 50, L_W, 20);
         getContentPane().add(label);
         lastName.setBounds(L_X + L_W + 10 + 62, 50, C_W, 20);
         getContentPane().add(lastName);
 
-        label = new JLabel("Стать:", JLabel.RIGHT);
+//        label = new JLabel("Стать:", JLabel.RIGHT);
+        label = new JLabel(MessageResource.getMessageResource().getString("id37"), JLabel.RIGHT);
         label.setBounds(L_X, 70, L_W, 20);
         getContentPane().add(label);
         m.setBounds(L_X + L_W + 10 + 65, 70, C_W / 2, 20);
@@ -80,7 +90,8 @@ public class StudentDialog extends JDialog implements ActionListener {
         w.setSelected(true);
         getContentPane().add(w);
 
-        label = new JLabel("Дата народження:", JLabel.RIGHT);
+//        label = new JLabel("Дата народження:", JLabel.RIGHT);
+        label = new JLabel(MessageResource.getMessageResource().getString("id38"), JLabel.RIGHT);
         label.setBounds(L_X, 90, L_W, 20);
         getContentPane().add(label);
         years = new JComboBox<>();
@@ -130,13 +141,15 @@ public class StudentDialog extends JDialog implements ActionListener {
             }
         });
 
-        label = new JLabel("Група:", JLabel.RIGHT);
+//        label = new JLabel("Група:", JLabel.RIGHT);
+        label = new JLabel(MessageResource.getMessageResource().getString("id40"), JLabel.RIGHT);
         label.setBounds(L_X, 115, L_W, 25);
         getContentPane().add(label);
         groupList.setBounds(L_X + L_W + 10, 115, C_W + 125, 25);
         getContentPane().add(groupList);
 
-        label = new JLabel("Рік навчання:", JLabel.RIGHT);
+//        label = new JLabel("Рік навчання:", JLabel.RIGHT);
+        label = new JLabel(MessageResource.getMessageResource().getString("id41"), JLabel.RIGHT);
         label.setBounds(L_X, 145, L_W, 20);
         getContentPane().add(label);
         year.setBounds(L_X + L_W + 10 + 62, 145, C_W, 20);

@@ -10,7 +10,7 @@ public class StudentTableModel extends AbstractTableModel {
 
     private Vector students;
 
-    public StudentTableModel(Vector students) {
+    StudentTableModel(Vector students) {
         this.students = students;
     }
 
@@ -29,7 +29,7 @@ public class StudentTableModel extends AbstractTableModel {
         if (column < 0 || column > 4) {
             return "";
         }
-        String[] columnNames = {"Прізвище", "Ім'я", "По батькові", "Дата"};
+        String[] columnNames = {MessageResource.getMessageResource().getString("id42"), MessageResource.getMessageResource().getString("id43"), MessageResource.getMessageResource().getString("id44"), MessageResource.getMessageResource().getString("id39")};
         return  columnNames[column];
     }
 
@@ -50,7 +50,7 @@ public class StudentTableModel extends AbstractTableModel {
         return null;
     }
 
-    public Student getStudent(int rowIndex) {
+    Student getStudent(int rowIndex) {
         if (students != null) {
             if (rowIndex < students.size() && rowIndex >= 0) {
                 return (Student) students.get(rowIndex);

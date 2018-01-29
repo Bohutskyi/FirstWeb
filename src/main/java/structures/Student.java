@@ -22,7 +22,7 @@ public class Student implements Comparable {
 
     }
 
-    public Student(ResultSet resultSet) throws SQLException {
+    Student(ResultSet resultSet) throws SQLException {
         this.studentId = resultSet.getInt(1);
         this.firstName = resultSet.getString(2);
         this.surName = resultSet.getString(3);

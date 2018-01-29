@@ -1,7 +1,5 @@
 package frame;
 
-import structures.ManagementSystem;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -13,9 +11,10 @@ public class CreateGroupDialog extends JDialog implements ActionListener {
     private JButton buttonOk = new JButton("Ok"),
             buttonCancel = new JButton("Cancel");
     private JTextField groupName, curator, specialty;
+//    private JSpinner curator;
 
     CreateGroupDialog() {
-        setTitle("Створення групи");
+        setTitle(MessageResource.getMessageResource().getString("id20"));
         setResizable(false);
 
         GridBagLayout gridBagLayout = new GridBagLayout();
@@ -23,7 +22,7 @@ public class CreateGroupDialog extends JDialog implements ActionListener {
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(5, 5, 5, 5);
 
-        JLabel label = new JLabel("Назва групи:");
+        JLabel label = new JLabel(MessageResource.getMessageResource().getString("id21"));
         constraints.gridwidth = GridBagConstraints.RELATIVE;
         constraints.fill = GridBagConstraints.NONE;
         constraints.anchor = GridBagConstraints.EAST;
@@ -37,7 +36,7 @@ public class CreateGroupDialog extends JDialog implements ActionListener {
         gridBagLayout.setConstraints(groupName, constraints);
         getContentPane().add(groupName);
 
-        label = new JLabel("Куратор:");
+        label = new JLabel(MessageResource.getMessageResource().getString("id22"));
         constraints.gridwidth = GridBagConstraints.RELATIVE;
         constraints.fill = GridBagConstraints.NONE;
         constraints.anchor = GridBagConstraints.EAST;
@@ -51,7 +50,7 @@ public class CreateGroupDialog extends JDialog implements ActionListener {
         gridBagLayout.setConstraints(curator, constraints);
         getContentPane().add(curator);
 
-        label = new JLabel("Спеціальність:");
+        label = new JLabel(MessageResource.getMessageResource().getString("id23"));
         constraints.gridwidth = GridBagConstraints.RELATIVE;
         constraints.fill = GridBagConstraints.NONE;
         constraints.anchor = GridBagConstraints.EAST;

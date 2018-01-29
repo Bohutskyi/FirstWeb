@@ -130,6 +130,7 @@ public class ManagementSystem {
         statement.close();
     }
 
+    //WIP
 //    public void createGroup(String groupName) throws SQLException {
 //        PreparedStatement statement = connection.prepareStatement("insert into groups")
 //    }
