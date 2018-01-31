@@ -1,11 +1,25 @@
 package structures;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class Group {
 
     private int groupId;
     private String nameGroup;
     private String curator;
     private String speciality;
+
+    Group() {
+
+    }
+
+    Group(ResultSet resultSet) throws SQLException {
+        this.setGroupId(resultSet.getInt(1));
+        this.setNameGroup(resultSet.getString(2));
+        this.setCurator(resultSet.getString(3));
+        this.setSpeciality(resultSet.getString(4));
+    }
 
     public int getGroupId() {
         return groupId;
@@ -45,4 +59,5 @@ public class Group {
                 "nameGroup='" + nameGroup + '\'' +
                 '}';
     }
+
 }

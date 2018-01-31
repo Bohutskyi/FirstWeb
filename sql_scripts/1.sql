@@ -56,3 +56,16 @@ select * from groups g inner join students s on g.group_id = s.group_id;
 SHOW VARIABLES LIKE 'character_set_client';
 
 select now();
+
+use students;
+select * from students order by sur_name, first_name;
+
+use students;
+select * from students where group_id = 1 and education_year = 2006 order by sur_name, first_name;
+#select * from students where group_id = ? and education_year = ? order by sur_name, first_name
+
+use students;
+update students set group_id = 2, education_year = 2011 
+where group_id = 1 and education_year = 450;
+#update students set group_id = ?, education_year = ? " +
+                #"where group_id = ? and education_year = ?

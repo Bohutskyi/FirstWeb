@@ -22,18 +22,20 @@ public class StudentsFrame extends JFrame implements ActionListener, ListSelecti
 
     private static final String MOVE_GROUP = "moveGroup";
     private static final String CLEAR_GROUP = "clearGroup";
-    private static final String CREATE_CROUP = "createGroup";  //WIP
+    private static final String CREATE_CROUP = "createGroup";
     private static final String INSERT_STUDENT = "insertStudent";
     private static final String UPDATE_STUDENT = "updateStudent";
     private static final String DELETE_STUDENT = "deleteStudent";
     private static final String ALL_STUDENTS = "allStudent";
     private static final String EXIT = "exit";
     private static final String SETTINGS = "settings";  //WIP
+    private static final String GROUP_INFO = "groupInfo"; //WIP
 
     private ManagementSystem managementSystem;
     private JList groupList;
     private JTable studentsList;
     private JSpinner spYear;
+    private DefaultListModel model;
 
     private void load(){
         try (BufferedReader reader = new BufferedReader(new FileReader("settings"))) {
@@ -52,13 +54,15 @@ public class StudentsFrame extends JFrame implements ActionListener, ListSelecti
     public StudentsFrame() throws Exception {
         load();
 
+//        this.setFont(new Font("Courier", Font.PLAIN, 14));
+
         getContentPane().setLayout(new BorderLayout());
         this.setBackground(ColorTheme.getColor1());
 
         JMenuBar menuBar = new JMenuBar();
 
-        JMenu firstMenu = new JMenu(MessageResource.getMessageResource().getString("id47"));
-        JMenuItem settingsItem = new JMenuItem(MessageResource.getMessageResource().getString("id48"));
+        JMenu firstMenu = new JMenu(MessageResource.getString("id47"));
+        JMenuItem settingsItem = new JMenuItem(MessageResource.getString("id48"));
         settingsItem.setName(SETTINGS);
         if (System.getProperty("os.name").toLowerCase().startsWith("mac")) {
             settingsItem.setAccelerator(KeyStroke.getKeyStroke(',', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
@@ -68,18 +72,18 @@ public class StudentsFrame extends JFrame implements ActionListener, ListSelecti
         settingsItem.addActionListener(this);
         firstMenu.add(settingsItem);
         firstMenu.addSeparator();
-        JMenuItem exitItem = new JMenuItem(MessageResource.getMessageResource().getString("id46"));
+        JMenuItem exitItem = new JMenuItem(MessageResource.getString("id46"));
         exitItem.setName(EXIT);
         settingsItem.setName(SETTINGS);
         exitItem.addActionListener(this);
         firstMenu.add(exitItem);
         menuBar.add(firstMenu);
 
-        JMenu menu = new JMenu(MessageResource.getMessageResource().getString("id1"));
+        JMenu menu = new JMenu(MessageResource.getString("id1"));
 //        JMenu menu = new JMenu("Звіти");
 //        menu.setText(Localization.getMessages().getString("JMenuReport"));
 //        JMenuItem menuItem = new JMenuItem("Всі студенти");
-        JMenuItem menuItem1 = new JMenuItem(MessageResource.getMessageResource().getString("id2"));
+        JMenuItem menuItem1 = new JMenuItem(MessageResource.getString("id2"));
         menuItem1.setName(ALL_STUDENTS);
         menuItem1.addActionListener(this);
         menu.add(menuItem1);
@@ -91,7 +95,7 @@ public class StudentsFrame extends JFrame implements ActionListener, ListSelecti
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 //        topPanel.add(new JLabel("Рік навчання:"));
-        topPanel.add(new JLabel(MessageResource.getMessageResource().getString("id3")));
+        topPanel.add(new JLabel(MessageResource.getString("id3")));
         SpinnerModel sm = new SpinnerNumberModel(2006, 1900, 2100, 1);
         spYear = new JSpinner(sm);
         spYear.addChangeListener(this);
@@ -108,10 +112,32 @@ public class StudentsFrame extends JFrame implements ActionListener, ListSelecti
         leftPanel.setBackground(ColorTheme.getColor1());
 
         managementSystem = ManagementSystem.getInstance();
-        Vector<Group> gr = new Vector<Group>(managementSystem.getGroups());
+        Vector<Group> gr = new Vector<>(managementSystem.getGroups());
 //        leftPanel.add(new JLabel("Групи:"), BorderLayout.NORTH);
-        leftPanel.add(new JLabel(MessageResource.getMessageResource().getString("id4")), BorderLayout.NORTH);
-        groupList = new JList(gr);
+        leftPanel.add(new JLabel(MessageResource.getString("id4")), BorderLayout.NORTH);
+
+
+//        groupList = new JList(gr);
+        model = new DefaultListModel();
+        groupList = new JList(model);
+        for (Group g : managementSystem.getGroups()) {
+            model.addElement(g);
+        }
+
+
+
+//        groupList.setCellRenderer(new DefaultListCellRenderer() {
+//            @Override
+//            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+//                Component render = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+//                if (value instanceof Group) {
+//                    System.out.println("Coooool");
+//                }
+//                return render;
+//            }
+//        });
+
+
         groupList.addListSelectionListener(this);
         groupList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         groupList.setSelectedIndex(0);
@@ -119,23 +145,27 @@ public class StudentsFrame extends JFrame implements ActionListener, ListSelecti
         groupList.setBackground(ColorTheme.getColor1());
 
 //        JButton buttonMoveGroup = new JButton("Перемістити");
-        JButton buttonMoveGroup = new JButton(MessageResource.getMessageResource().getString("id5"));
+        JButton buttonMoveGroup = new JButton(MessageResource.getString("id5"));
         buttonMoveGroup.setName(MOVE_GROUP);
-        JButton buttonClearGroup = new JButton(MessageResource.getMessageResource().getString("id6"));
+        JButton buttonClearGroup = new JButton(MessageResource.getString("id6"));
 //        JButton buttonClearGroup = new JButton("Очистити");
         buttonClearGroup.setName(CLEAR_GROUP);
 //        JButton buttonCreateGroup = new JButton(("Створити"));
-        JButton buttonCreateGroup = new JButton(MessageResource.getMessageResource().getString("id7"));
+        JButton buttonCreateGroup = new JButton(MessageResource.getString("id7"));
         buttonCreateGroup.setName(CREATE_CROUP);
+        JButton buttonGroupInfo = new JButton("Group Info add id");
+        buttonGroupInfo.setName(GROUP_INFO);
         buttonMoveGroup.addActionListener(this);
         buttonClearGroup.addActionListener(this);
         buttonCreateGroup.addActionListener(this);
+        buttonGroupInfo.addActionListener(this);
 
         JPanel panelButtonGroup = new JPanel();
         panelButtonGroup.setLayout(new GridLayout(2, 2));
         panelButtonGroup.add(buttonMoveGroup);
         panelButtonGroup.add(buttonClearGroup);
         panelButtonGroup.add(buttonCreateGroup);
+        panelButtonGroup.add(buttonGroupInfo);
         leftPanel.add(panelButtonGroup, BorderLayout.SOUTH);
         panelButtonGroup.setBackground(ColorTheme.getColor1());
 
@@ -145,7 +175,7 @@ public class StudentsFrame extends JFrame implements ActionListener, ListSelecti
         rightPanel.setBackground(ColorTheme.getColor2());
 
 //        rightPanel.add(new JLabel("Студенти:"), BorderLayout.NORTH);
-        rightPanel.add(new JLabel(MessageResource.getMessageResource().getString("id8")), BorderLayout.NORTH);
+        rightPanel.add(new JLabel(MessageResource.getString("id8")), BorderLayout.NORTH);
 
         // Создаем таблицу и вставляем ее в скроллируемую
         // панель, которую в свою очередь уже кладем на панель right
@@ -161,15 +191,15 @@ public class StudentsFrame extends JFrame implements ActionListener, ListSelecti
 //        rightPanel.add(new JScrollPane(studentsList), BorderLayout.CENTER);
 
 //        JButton btnAddSt = new JButton("Добавити");
-        JButton btnAddSt = new JButton(MessageResource.getMessageResource().getString("id9"));
+        JButton btnAddSt = new JButton(MessageResource.getString("id9"));
         btnAddSt.setName(INSERT_STUDENT);
         btnAddSt.addActionListener(this);
-        JButton btnUpdSt = new JButton(MessageResource.getMessageResource().getString("id10"));
+        JButton btnUpdSt = new JButton(MessageResource.getString("id10"));
 //        JButton btnUpdSt = new JButton("Редагувати");
         btnUpdSt.setName(UPDATE_STUDENT);
         btnUpdSt.addActionListener(this);
 //        JButton btnDelSt = new JButton("Видалити");
-        JButton btnDelSt = new JButton(MessageResource.getMessageResource().getString("id11"));
+        JButton btnDelSt = new JButton(MessageResource.getString("id11"));
         btnDelSt.setName(DELETE_STUDENT);
         btnDelSt.addActionListener(this);
 
@@ -214,6 +244,9 @@ public class StudentsFrame extends JFrame implements ActionListener, ListSelecti
             if (c.getName().equals(CREATE_CROUP)) {
                 createGroup();
             }
+            if (c.getName().equals(GROUP_INFO)) {
+                //WIP
+            }
             if (c.getName().equals(EXIT)) {
                 this.dispose();
             }
@@ -230,16 +263,31 @@ public class StudentsFrame extends JFrame implements ActionListener, ListSelecti
         reloadStudents();
     }
 
-    public void reloadStudents() {
+    void reloadStudents() {
         new Thread(() -> {
             if (studentsList != null) {
                 Group group = (Group) groupList.getSelectedValue();
                 int year = ((SpinnerNumberModel) spYear.getModel()).getNumber().intValue();
                 try {
                     Collection<Student> students = managementSystem.getStudentsFromGroup(group, year);
-                    studentsList.setModel(new StudentTableModel(new Vector<Student>(students)));
+                    studentsList.setModel(new StudentTableModel(new Vector<>(students)));
                 } catch (SQLException e) {
                     JOptionPane.showMessageDialog(StudentsFrame.this, e.getMessage());
+                }
+            }
+        }).start();
+    }
+
+    private void addLastAddedGroup() {
+        new Thread( () -> {
+            if (groupList != null) {
+                try {
+                    Group group = managementSystem.getLastAddedGroup();
+                    if (group != null && !model.get(model.getSize() - 1).toString().equals(group.toString())) {
+                        model.addElement(group);
+                    }
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
                 }
             }
         }).start();
@@ -249,7 +297,7 @@ public class StudentsFrame extends JFrame implements ActionListener, ListSelecti
         new Thread(() -> {
             if (groupList.getSelectedValue() == null) {
 //                JOptionPane.showMessageDialog(StudentsFrame.this, "Виберіть групу");
-                JOptionPane.showMessageDialog(StudentsFrame.this, MessageResource.getMessageResource().getString("id12"));
+                JOptionPane.showMessageDialog(StudentsFrame.this, MessageResource.getString("id12"));
                 return;
             }
             try {
@@ -273,9 +321,9 @@ public class StudentsFrame extends JFrame implements ActionListener, ListSelecti
             if (groupList.getSelectedValue() != null) {
                 if (JOptionPane.showConfirmDialog(StudentsFrame.this,
 //                        "Ви дійсно хочете видалити студентів із групи?",
-                        MessageResource.getMessageResource().getString("id13"),
+                        MessageResource.getString("id13"),
 //                        "Видалення групи", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                        MessageResource.getMessageResource().getString("id14"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                        MessageResource.getString("id14"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     Group group = (Group) groupList.getSelectedValue();
                     int year = ((SpinnerNumberModel) spYear.getModel()).getNumber().intValue();
                     try {
@@ -307,11 +355,11 @@ public class StudentsFrame extends JFrame implements ActionListener, ListSelecti
             if (studentsList != null) {
                 if (studentsList.getSelectedRowCount() > 1) {
 //                    JOptionPane.showMessageDialog(StudentsFrame.this, "Не можна редагувати декілька студентів одночасно");
-                    JOptionPane.showMessageDialog(StudentsFrame.this, MessageResource.getMessageResource().getString("id15"));
+                    JOptionPane.showMessageDialog(StudentsFrame.this, MessageResource.getString("id15"));
                     return;
                 } else if (studentsList.getSelectedRowCount() == 0) {
 //                    JOptionPane.showMessageDialog(StudentsFrame.this, "Виберіть студента для редагування");
-                    JOptionPane.showMessageDialog(StudentsFrame.this, MessageResource.getMessageResource().getString("id16"));
+                    JOptionPane.showMessageDialog(StudentsFrame.this, MessageResource.getString("id16"));
                     return;
                 }
                 try {
@@ -333,9 +381,9 @@ public class StudentsFrame extends JFrame implements ActionListener, ListSelecti
                 String message;
 
                 if (studentsList.getSelectedRowCount() == 0) {
-                    message = MessageResource.getMessageResource().getString("id45");
+                    message = MessageResource.getString("id45");
                     JOptionPane.showOptionDialog(StudentsFrame.this, message,
-                            MessageResource.getMessageResource().getString("id19"), JOptionPane.PLAIN_MESSAGE, JOptionPane.INFORMATION_MESSAGE,
+                            MessageResource.getString("id19"), JOptionPane.PLAIN_MESSAGE, JOptionPane.INFORMATION_MESSAGE,
                             UIManager.getIcon("OptionPane.informationIcon"),
                             null, null);
                     return;
@@ -343,19 +391,19 @@ public class StudentsFrame extends JFrame implements ActionListener, ListSelecti
 
                 if (studentsList.getSelectedRowCount() == 1) {
 //                    message = "Ви дійсно хочете видалити студента?";
-                    message = MessageResource.getMessageResource().getString("id17");
+                    message = MessageResource.getString("id17");
 //                } else if (studentsList.getSelectedRowCount() == 0) {
-//                    message = MessageResource.getMessageResource().getString("id45");
+//                    message = MessageResource.getString("id45");
 //                    return;
                 } else {
 //                    message = "Ви дійсно хочете видалити студентів?";
-                    message = MessageResource.getMessageResource().getString("id18");
+                    message = MessageResource.getString("id18");
                 }
 
                 StudentTableModel studentTableModel = (StudentTableModel) studentsList.getModel();
                 if (JOptionPane.showConfirmDialog(StudentsFrame.this, message,
 //                        "Видалення студента", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                        MessageResource.getMessageResource().getString("id19"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                        MessageResource.getString("id19"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     for (int i : studentsList.getSelectedRows()) {
                         Student student = studentTableModel.getStudent(i);
                         try {
@@ -371,15 +419,19 @@ public class StudentsFrame extends JFrame implements ActionListener, ListSelecti
     }
 
     private void createGroup() {
-//        JOptionPane.showMessageDialog(StudentsFrame.this, CREATE_CROUP);
-
         new Thread(() -> {
-            CreateGroupDialog dialog = new CreateGroupDialog();
-            dialog.setModal(true);
-            dialog.setVisible(true);
+            try {
+                CreateGroupDialog dialog = new CreateGroupDialog();
+                dialog.setModal(true);
+                dialog.setVisible(true);
+                addLastAddedGroup();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
         }).start();
     }
 
+    //WIP
     private void showAllStudents() {
         JOptionPane.showMessageDialog(this, "showAllStudents");
     }

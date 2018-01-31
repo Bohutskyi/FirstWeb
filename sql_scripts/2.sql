@@ -76,3 +76,61 @@ select * from students;
 
 select * from students s inner join groups g on s.group_id = g.group_id;
 
+use students_system;
+create view main_view
+as
+select * from groups g inner join teachers t on g.teacher_id = t.teacher_id inner join specialties s on g.speciality_id = s.specialty_id;
+
+
+
+#getGroups()
+use students_system;
+select g.group_id, g.group_name, t.sur_name, s.specialty_name from groups g inner join teachers t on g.teacher_id = t.teacher_id inner join specialties s on g.speciality_id = s.specialty_id;
+
+#getStudents()
+use students_system;
+select * from students order by sur_name, first_name;
+
+#getStudentsFromGroup(...)
+use students_system;
+select * from students where group_id = 1 and education_year = 2013 order by sur_name, first_name;
+
+#moveStudentsToGroup(...)
+use students_system;
+update students set group_id = 1, education_year = 2010
+where group_id = 2 and education_year = 2009;
+
+#removeStudentsFromGroup(...)
+use students_system;
+delete from students where group_id = 1 and education_year = 2010;
+
+#insertStudent(...)
+use students_system;
+INSERT INTO `students_system`.`students` (`first_name`, `sur_name`, `last_name`, `date_of_birth`, `sex`, `group_id`, `education_year`) VALUES ('Test', 'T', 'TT', '1990-06-28', 'Ч', '1', '2007');
+
+#updateStudent(...)
+use students_system;
+update students set first_name = '123', last_name = '543', sur_name = '123', sex = 'Ч', date_of_birth = '1996-03-05', group_id = 1, education_year = 2007
+where student_id = 13;
+
+#deleteStudent(...)
+use students_system;
+delete from students where student_id = 13;
+
+#getTeachers()
+use students_system;
+select * from teachers;
+
+#createGroup(...)
+use students_system;
+insert into `students_system`.`groups` (`group_name`, `teacher_id`, `speciality_id`) values ('ФЕ-93', '4', '1');
+
+delete from groups where group_id > 3;
+select * from groups;
+
+
+
+use students_system;
+select * from groups order by group_id desc limit 1;
+
+

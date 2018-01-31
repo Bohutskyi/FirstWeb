@@ -17,7 +17,7 @@ public class testLocalization {
         System.out.println(messages.getString("inquiry"));
         System.out.println(messages.getString("farewell"));
 
-        System.out.println(MessageResource.getMessageResource().getString("greetings"));
+        System.out.println(MessageResource.getString("greetings"));
 
 //        Locale currentLocale = new Locale("ua", "UA");
 //        ResourceBundle messages = ResourceBundle.getBundle("loc/MessagesBundle", currentLocale);

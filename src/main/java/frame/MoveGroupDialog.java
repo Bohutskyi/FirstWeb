@@ -19,7 +19,7 @@ public class MoveGroupDialog extends JDialog implements ActionListener {
     private boolean result = false;
 
     MoveGroupDialog(int year, List groups) {
-        setTitle(MessageResource.getMessageResource().getString("id24"));
+        setTitle(MessageResource.getString("id24"));
         this.setResizable(false);
 
         GridBagLayout gridBagLayout = new GridBagLayout();
@@ -27,7 +27,7 @@ public class MoveGroupDialog extends JDialog implements ActionListener {
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(5, 5,5, 5);
 
-        JLabel label = new JLabel(MessageResource.getMessageResource().getString("id25"));
+        JLabel label = new JLabel(MessageResource.getString("id25"));
         constraints.gridwidth = GridBagConstraints.RELATIVE;
         constraints.fill = GridBagConstraints.NONE;
         constraints.anchor = GridBagConstraints.EAST;
@@ -41,7 +41,7 @@ public class MoveGroupDialog extends JDialog implements ActionListener {
         gridBagLayout.setConstraints(groupList, constraints);
         getContentPane().add(groupList);
 
-        label = new JLabel(MessageResource.getMessageResource().getString("id26"));
+        label = new JLabel(MessageResource.getString("id26"));
         constraints.gridwidth = GridBagConstraints.RELATIVE;
         constraints.fill = GridBagConstraints.NONE;
         constraints.anchor = GridBagConstraints.EAST;

@@ -11,7 +11,7 @@ public class MessageResource {
         messageResource = ResourceBundle.getBundle("Localization/Project", new Locale(buffer[0], buffer[1]));
     }
 
-    public static ResourceBundle getMessageResource() {
-        return messageResource;
+    public static String getString(String key) {
+        return messageResource.getString(key);
     }
 }
