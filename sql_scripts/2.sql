@@ -131,6 +131,8 @@ select * from groups;
 
 
 use students_system;
+select * from groups;
 select * from groups order by group_id desc limit 1;
 
-
+select * from teachers where teacher_id = 1;
+select GROUP_CONCAT(sur_name, ' ',  first_name, ' ', last_name) from teachers where teacher_id = 1;

@@ -9,6 +9,7 @@ public class Group {
     private String nameGroup;
     private String curator;
     private String speciality;
+    private int curatorID;
 
     Group() {
 
@@ -51,6 +52,14 @@ public class Group {
 
     public void setSpeciality(String speciality) {
         this.speciality = speciality;
+    }
+
+    public int getCuratorID() {
+        return curatorID;
+    }
+
+    public void setCuratorID(int curatorID) {
+        this.curatorID = curatorID;
     }
 
     @Override

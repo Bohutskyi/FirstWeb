@@ -32,13 +32,14 @@ public class ManagementSystem {
 //        try {
             Statement statement = connection.createStatement();
 //            ResultSet resultSet = statement.executeQuery("select * from groups");
-            ResultSet resultSet = statement.executeQuery("select g.group_id, g.group_name, t.sur_name, s.specialty_name from groups g inner join teachers t on g.teacher_id = t.teacher_id inner join specialties s on g.speciality_id = s.specialty_id");
+            ResultSet resultSet = statement.executeQuery("select g.group_id, g.group_name, t.sur_name, s.specialty_name, t.teacher_id from groups g inner join teachers t on g.teacher_id = t.teacher_id inner join specialties s on g.speciality_id = s.specialty_id");
             while (resultSet.next()) {
                 Group group = new Group();
                 group.setGroupId(resultSet.getInt(1));
                 group.setNameGroup(resultSet.getString(2));
                 group.setCurator(resultSet.getString(3));
                 group.setSpeciality(resultSet.getString(4));
+                group.setCuratorID(resultSet.getInt(5));
                 groups.add(group);
             }
 //        }
@@ -185,6 +186,16 @@ public class ManagementSystem {
         ResultSet resultSet = statement.executeQuery();
         if (resultSet.next()) {
             return new Group(resultSet);
+        }
+        return null;
+    }
+
+    public String getFullTeacherName(int id) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement("select GROUP_CONCAT(sur_name, ' ',  first_name, ' ', last_name) from teachers where teacher_id = ?");
+        statement.setInt(1, id);
+        ResultSet resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            return resultSet.getString(1);
         }
         return null;
     }

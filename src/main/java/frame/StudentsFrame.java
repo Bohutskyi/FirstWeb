@@ -29,7 +29,7 @@ public class StudentsFrame extends JFrame implements ActionListener, ListSelecti
     private static final String ALL_STUDENTS = "allStudent";
     private static final String EXIT = "exit";
     private static final String SETTINGS = "settings";  //WIP
-    private static final String GROUP_INFO = "groupInfo"; //WIP
+    private static final String GROUP_INFO = "groupInfo";
 
     private ManagementSystem managementSystem;
     private JList groupList;
@@ -153,7 +153,7 @@ public class StudentsFrame extends JFrame implements ActionListener, ListSelecti
 //        JButton buttonCreateGroup = new JButton(("Створити"));
         JButton buttonCreateGroup = new JButton(MessageResource.getString("id7"));
         buttonCreateGroup.setName(CREATE_CROUP);
-        JButton buttonGroupInfo = new JButton("Group Info add id");
+        JButton buttonGroupInfo = new JButton(MessageResource.getString("id53"));
         buttonGroupInfo.setName(GROUP_INFO);
         buttonMoveGroup.addActionListener(this);
         buttonClearGroup.addActionListener(this);
@@ -245,7 +245,7 @@ public class StudentsFrame extends JFrame implements ActionListener, ListSelecti
                 createGroup();
             }
             if (c.getName().equals(GROUP_INFO)) {
-                //WIP
+                showGroupInfo();
             }
             if (c.getName().equals(EXIT)) {
                 this.dispose();
@@ -434,6 +434,20 @@ public class StudentsFrame extends JFrame implements ActionListener, ListSelecti
     //WIP
     private void showAllStudents() {
         JOptionPane.showMessageDialog(this, "showAllStudents");
+    }
+
+    private void showGroupInfo() {
+        new Thread(() -> {
+            try {
+                if (groupList.getSelectedValue() != null) {
+                    GroupInfoDialog groupInfoDialog = new GroupInfoDialog((Group) groupList.getSelectedValue());
+                    groupInfoDialog.setModal(true);
+                    groupInfoDialog.setVisible(true);
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }).start();
     }
 
     class GroupPanel extends JPanel {
