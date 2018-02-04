@@ -13,10 +13,7 @@ import java.util.*;
 public class CreateGroupDialog extends JDialog implements ActionListener {
 
     private static final int HEIGHT = 200, WIDTH = 500;
-    private JButton buttonOk = new JButton(MessageResource.getString("id49")),
-            buttonCancel = new JButton(MessageResource.getString("id50"));
     private JTextField groupName;
-    private JLabel message;
     private JComboBox curators, specialities;
 
     CreateGroupDialog() throws Exception {
@@ -72,6 +69,7 @@ public class CreateGroupDialog extends JDialog implements ActionListener {
         gridBagLayout.setConstraints(specialities, constraints);
         getContentPane().add(specialities);
 
+        JLabel message;
         message = new JLabel();
         message.setFont(new Font("Arial", Font.BOLD, 14));
         message.setForeground(Color.RED);
@@ -82,6 +80,8 @@ public class CreateGroupDialog extends JDialog implements ActionListener {
         gridBagLayout.setConstraints(message, constraints);
         getContentPane().add(message);
 
+        JButton buttonOk = new JButton(MessageResource.getString("id49"));
+        JButton buttonCancel = new JButton(MessageResource.getString("id50"));
         groupName.getDocument().addDocumentListener(new TextFieldDocumentListener(groupName, message, buttonOk));
 
         constraints.gridwidth = GridBagConstraints.RELATIVE;
@@ -89,12 +89,12 @@ public class CreateGroupDialog extends JDialog implements ActionListener {
         buttonOk.setName("Ok");
         buttonOk.addActionListener(this);
         gridBagLayout.setConstraints(buttonOk, constraints);
-        getContentPane().add(buttonOk);
 
         buttonCancel.setName("Cancel");
         buttonCancel.addActionListener(this);
         gridBagLayout.setConstraints(buttonCancel, constraints);
         getContentPane().add(buttonCancel);
+        getContentPane().add(buttonOk);
 
         setDefaultCloseOperation(HIDE_ON_CLOSE);
 

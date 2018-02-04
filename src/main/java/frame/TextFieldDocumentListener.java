@@ -12,8 +12,9 @@ public class TextFieldDocumentListener implements DocumentListener {
     private Border temp;
     private JLabel message;
     private JButton button;
+//    private boolean state;
 
-    public TextFieldDocumentListener(JTextField textField, JLabel label, JButton button) {
+    TextFieldDocumentListener(JTextField textField, JLabel label, JButton button) {
         this.textField = textField;
         this.message = label;
         this.button = button;
@@ -21,13 +22,20 @@ public class TextFieldDocumentListener implements DocumentListener {
         if (textField.getText().equals("")) {
             textField.setBorder(BorderFactory.createLineBorder(Color.RED));
             if (message != null) {
-                message.setText("Red fields cannot be empty add id");
+                message.setText(MessageResource.getString("id62"));
             }
             if (button != null) {
                 button.setEnabled(false);
             }
         }
     }
+//    TextFieldDocumentListener(JLabel label, JButton button, JTextField... textFields) {
+//        this.message = label;
+//        this.button = button;
+//        for (JTextField textField : textFields) {
+//
+//        }
+//    }
 
     @Override
     public void insertUpdate(DocumentEvent e) {
@@ -45,7 +53,7 @@ public class TextFieldDocumentListener implements DocumentListener {
         if (textField.getText().equals("")) {
             textField.setBorder(BorderFactory.createLineBorder(Color.RED));
             if (message != null) {
-                message.setText("Red fields cannot be empty add id");
+                message.setText(MessageResource.getString("id62"));
             }
             if (button != null) {
                 button.setEnabled(false);

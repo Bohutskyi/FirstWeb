@@ -29,7 +29,8 @@ public class StudentTableModel extends AbstractTableModel {
         if (column < 0 || column > 4) {
             return "";
         }
-        String[] columnNames = {MessageResource.getString("id42"), MessageResource.getString("id43"), MessageResource.getString("id44"), MessageResource.getString("id39")};
+        String[] columnNames = {MessageResource.getString("id42"), MessageResource.getString("id43"),
+                MessageResource.getString("id44"), MessageResource.getString("id39")};
         return  columnNames[column];
     }
 
